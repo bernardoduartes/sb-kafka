@@ -17,7 +17,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Configuration
-public class ConsumerKafkaConfig {
+public class KafkaConfig {
     @Value(value = "${spring.kafka.bootstrap-servers:localhost:9092}")
     private String bootstrapAddress;
 
@@ -48,11 +48,11 @@ public class ConsumerKafkaConfig {
         props.put(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, false);
         return new DefaultKafkaConsumerFactory<>(props);
     }
-
     @Bean
     public ConcurrentKafkaListenerContainerFactory<String, PixDTO> kafkaListenerContainerFactory() {
         ConcurrentKafkaListenerContainerFactory<String, PixDTO> factory = new ConcurrentKafkaListenerContainerFactory<>();
         factory.setConsumerFactory(consumerFactory());
         return factory;
     }
+
 }
