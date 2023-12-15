@@ -9,6 +9,7 @@ import br.shizuca.spconsumer.repository.KeyRepository;
 import br.shizuca.spconsumer.repository.PixRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
+import org.springframework.kafka.support.Acknowledgment;
 import org.springframework.stereotype.Service;
 
 
@@ -22,7 +23,7 @@ public class PixValidator {
     private PixRepository pixRepository;
 
     @KafkaListener(topics = "pix-topic", groupId = "grupo")
-    public void processaPix(PixDTO pixDTO) {
+    public void processaPix(PixDTO pixDTO, Acknowledgment acknowledgment) {
         System.out.println("Pix  recebido: " + pixDTO.getIdentifier());
 
         Pix pix = pixRepository.findByIdentifier(pixDTO.getIdentifier());
@@ -36,6 +37,8 @@ public class PixValidator {
             pix.setStatus(PixStatus.PROCESSADO);
         }
         pixRepository.save(pix);
+
+        acknowledgment.acknowledge();
     }
 
 }
